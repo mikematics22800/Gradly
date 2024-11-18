@@ -6,3 +6,6 @@
   width: 0;
 }
 
+.searchbar {
+  @apply shadow-lg rounded-md text-xl outline-none max-w-[36rem] w-full bg-white flex justify-between items-center pr-4
+}
