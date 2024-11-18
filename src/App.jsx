@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import searchSchools from "./api/searchSchools"
+import {getAllSchools, searchSchools} from "./api/searchSchools"
 import { Button, CircularProgress} from "@mui/material"
 
 function App() {
@@ -20,6 +20,13 @@ function App() {
   useEffect(() => {
     console.log(schools)
   }, [schools])
+
+  useEffect(() => {
+    getAllSchools()
+      .then(data => {
+        console.log(data)
+      })
+  }, [])
 
   return (
     <div className="w-screen h-screen">
