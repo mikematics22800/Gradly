@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react"
 import getSchools from "./api/getSchools"
-import { Button, CircularProgress, minor} from "@mui/material"
+import { Button, CircularProgress} from "@mui/material"
 import { Autocomplete } from "@react-google-maps/api"
 
 function App() {
-  const [state, setState] = useState('')
-  const [city, setCity] = useState('')
+  const [name, setName] = useState(null)
+  const [state, setState] = useState(null)
+  const [city, setCity] = useState(null)
   const [schools, setSchools] = useState([])
   const [loading, setLoading] = useState(false)
   const autocompleteRef = useRef(null)
@@ -13,9 +14,10 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true)
-    console.log(state, city)
+    console.log(name, state, city)
     getSchools({state, city})
       .then(data => {
+        name ? setSchools(data.results.filter(school => school.school.name.toLowerCase().includes(name.toLowerCase()))) :
         setSchools(data.results)
         console.log(data.results)
         setLoading(false)
@@ -59,10 +61,17 @@ function App() {
     <div className="w-screen h-screen">
       <nav className="bg-blue-300 fixed top-0 w-full h-20 flex items-center px-10">
         <form className="flex items-center gap-5 w-full" onSubmit={handleSubmit}>
+          <input
+              type="text"
+              placeholder="School Name"
+              className="w-[400px] p-2 border border-gray-300 rounded"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           <Autocomplete 
             onLoad={ref => (autocompleteRef.current = ref)}
             onPlaceChanged={onPlaceChanged}
-            types={['(cities)']}
+            types={['(regions)']}
             componentRestrictions={{ country: "us" }}
           >
             <input
