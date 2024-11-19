@@ -2,8 +2,15 @@ import axios from 'axios';
 
 const api_key = import.meta.env.VITE_COLLEGE_API_KEY;
 
-const getSchools = async ({state, city}) => {
-  const query = city ? { 'school.state': state, 'school.city': city } : { 'school.state': state };
+const getSchools = async ({name, state, city}) => {
+  const query = {};
+  if (name) query['school.name'] = name;
+  if (state) query['school.state'] = state;
+  if (city) query['school.city'] = city;
+  if (!name && !state && !city) {
+    alert('Please provide a school name or location');
+    return;
+  }
   try {
     const response = await axios.request({
       method: 'GET',
