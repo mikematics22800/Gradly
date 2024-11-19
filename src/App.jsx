@@ -93,9 +93,9 @@ function App() {
                     {minority.aanipi === 1 && <li>Asian American and Native American Pacific Islander</li>}
                     {minority.annh === 1 && <li>Alaska Native and Native Hawaiian</li>}                 
                     {minority.hispanic === 1 && <li>Hispanic</li>}            
-                    {minority.historically_black === 0 && <li>Historically Black</li>}
+                    {minority.historically_black === 1 && <li>Historically Black</li>}
                     {minority.nant === 1 && <li>Native American Nontribal</li>}
-                    {minority.predominantly_black === 0 && <li>Predominantly Black</li>}   
+                    {minority.predominantly_black === 1 && <li>Predominantly Black</li>}   
                     {minority.tribal === 1 && <li>Tribal</li>}
                   </ul>
                   {data.under_investigation === 0 ? ('') : (
