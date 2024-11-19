@@ -98,9 +98,7 @@ function App() {
                     {minority.predominantly_black === 1 && <li>Predominantly Black</li>}   
                     {minority.tribal === 1 && <li>Tribal</li>}
                   </ul>
-                  {data.under_investigation === 0 ? ('') : (
-                    <p>Under Investigation:</p>
-                  )}
+                  {data.under_investigation === 1 && <p>Under Investigation:</p>}
               </li>
             )
           })}
