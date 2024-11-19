@@ -90,13 +90,13 @@ function App() {
                   {data.women_only === 1 && <p>Women Only</p>}
                   <p>Minority Serving: {Object.values(minority).every(value => value === 0) && 'No'}</p>
                   <ul className="list-disc pl-10">
-                    {minority.aanipi === 0 && <li>Asian American and Native American Pacific Islander</li>}
-                    {minority.annh === 0 && <li>Alaska Native and Native Hawaiian</li>}                 
-                    {minority.hispanic === 0 && <li>Hispanic</li>}            
+                    {minority.aanipi === 1 && <li>Asian American and Native American Pacific Islander</li>}
+                    {minority.annh === 1 && <li>Alaska Native and Native Hawaiian</li>}                 
+                    {minority.hispanic === 1 && <li>Hispanic</li>}            
                     {minority.historically_black === 0 && <li>Historically Black</li>}
-                    {minority.nant === 0 && <li>Native American Nontribal</li>}
+                    {minority.nant === 1 && <li>Native American Nontribal</li>}
                     {minority.predominantly_black === 0 && <li>Predominantly Black</li>}   
-                    {minority.tribal === 0 && <li>Tribal</li>}
+                    {minority.tribal === 1 && <li>Tribal</li>}
                   </ul>
                   {data.under_investigation === 0 ? ('') : (
                     <p>Under Investigation:</p>
