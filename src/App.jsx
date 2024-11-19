@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import getSchools from "./api/getSchools"
-import { Button, CircularProgress} from "@mui/material"
+import { Button, CircularProgress, minor} from "@mui/material"
 import { Autocomplete } from "@react-google-maps/api"
 
 function App() {
@@ -36,6 +36,15 @@ function App() {
     console.log(schools)
   }, [schools])
 
+  const renderPrograms = (programs) => {
+    return (
+        Object.keys(programs)
+          .filter(program => programs[program] === 1)
+          .map(program => program.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase()))
+          .join(', ')
+    );
+  }
+
   return (
     <div className="w-screen h-screen">
       <nav className="bg-blue-300 fixed top-0 w-full h-20 flex items-center px-10">
@@ -64,39 +73,48 @@ function App() {
         (<ul className="flex flex-col gap-5">
           {schools?.map(school => {
             const data = school.school
+            const latest = school.latest
+            const minority = data.minority_serving
             return (
               <li className="border border-gray-300 p-5" key={school.id}>
                 <h2 className="text-lg font-bold">{data.name}</h2>
                   <p>{data.address}, {data.city}, {data.state}, {data.zip}</p>
-                  <p>School URL: <a href={`http://${data.school_url}`} target="_blank" rel="noopener noreferrer">{data.school_url}</a></p>
+                  <p>Official Website: <a href={`http://${data.school_url}`} target="_blank" rel="noopener noreferrer">{data.school_url}</a></p>
+                  <p>Associate Programs: {latest.academics.program_available.assoc ? renderPrograms(latest.academics.program.assoc) : 'None'}</p>
+                  <p>Bachelor Programs: {latest.academics.program_available.bachelors ? renderPrograms(latest.academics.program.bachelors): 'None'}</p>
                   <p>Accreditor: {data.accreditor} ({data.accreditor_code})</p>
-                  <p>Branches: {data.branches}</p>
-                  <p>Carnegie Basic: {data.carnegie_basic}</p>
-                  <p>Carnegie Size Setting: {data.carnegie_size_setting}</p>
-                  <p>Carnegie Undergrad: {data.carnegie_undergrad}</p>
-                  <p>Degrees Awarded: Highest - {data.degrees_awarded.highest}, Predominant - {data.degrees_awarded.predominant}, Predominant Recoded - {data.degrees_awarded.predominant_recoded}</p>
-                  <p>Endowment: Begin - {data.endowment.begin}, End - {data.endowment.end}</p>
-                  <p>Faculty Salary: {data.faculty_salary}</p>
-                  <p>FT Faculty Rate: {data.ft_faculty_rate}</p>
-                  <p>Institutional Characteristics Level: {data.institutional_characteristics.level}</p>
-                  <p>Instructional Expenditure per FTE: {data.instructional_expenditure_per_fte}</p>
-                  <p>Locale: {data.locale}</p>
-                  <p>Main Campus: {data.main_campus}</p>
-                  <p>Men Only: {data.men_only}</p>
-                  <p>Minority Serving: ANNH - {data.minority_serving.annh}, NANT - {data.minority_serving.nant}, AANIPI - {data.minority_serving.aanipi}, Tribal - {data.minority_serving.tribal}, Hispanic - {data.minority_serving.hispanic}</p>
-                  <p>Online Only: {data.online_only}</p>
-                  <p>Open Admissions Policy: {data.open_admissions_policy}</p>
-                  <p>Operating: {data.operating}</p>
-                  <p>Ownership: {data.ownership}</p>
-                  <p>Ownership PEPS: {data.ownership_peps}</p>
-                  <p>Price Calculator URL: <a href={`http://${data.price_calculator_url}`} target="_blank" rel="noopener noreferrer">{data.price_calculator_url}</a></p>
-                  <p>Region ID: {data.region_id}</p>
-                  <p>Religious Affiliation: {data.religious_affiliation}</p>
-                  <p>Title IV: Approval Date - {data.title_iv.approval_date}, Eligibility Type - {data.title_iv.eligibility_type}</p>
-                  <p>Tuition Revenue per FTE: {data.tuition_revenue_per_fte}</p>
-                  <p>Under Investigation: {data.under_investigation}</p>
-                  <p>Women Only: {data.women_only}</p>
-                  <p>Degree Urbanization: {data.degree_urbanization}</p>
+                  <p>Main Campus: {data.main_campus === 0 ? 'No' : 'Yes'}</p>
+                  {data.online_only === 1 && <p>Online Only</p>}
+                  <p>Price Calculator: <a href={`http://${data.price_calculator_url}`} target="_blank" rel="noopener noreferrer">{data.price_calculator_url}</a></p>
+                  {data.men_only === 1 && <p>Men Only</p>}
+                  {data.women_only === 1 && <p>Women Only</p>}
+                  <p>Minority Serving: {Object.values(minority).every(value => value === 0) && 'No'}</p>
+                  <ul className="list-disc pl-10">
+                    {minority.aanipi === 0 ? ('') : (
+                      <li>Asian American and Native American Pacific Islander</li>
+                    )}
+                    {minority.annh === 0 ? ('') : (
+                      <li>Alaska Native and Native Hawaiian</li>
+                    )}
+                    {minority.hispanic === 0 ? ('') : (
+                      <li>Hispanic</li>
+                    )}
+                    {minority.historically_black === 0 ? ('') : (
+                      <li>Historically Black</li>
+                    )}
+                    {minority.nant === 0 ? ('') : (
+                      <li>Native American Nontribal</li>
+                    )}
+                    {minority.predominantly_black === 0 ? ('') : (
+                      <li>Predominantly Black</li>
+                    )}
+                    {minority.tribal === 0 ? ('') : (
+                      <li>Tribal</li>
+                    )}
+                  </ul>
+                  {data.under_investigation === 0 ? ('') : (
+                    <p>Under Investigation:</p>
+                  )}
               </li>
             )
           })}
