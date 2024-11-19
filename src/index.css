@@ -9,3 +9,11 @@
 .searchbar {
   @apply shadow-lg rounded-md text-xl outline-none max-w-[36rem] w-full bg-white flex justify-between items-center pr-4
 }
+
+.school-list-item {
+  @apply border border-gray-300 p-5 
+}
+
+.school-list-item span {
+  @apply font-bold
+}

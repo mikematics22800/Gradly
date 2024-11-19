@@ -45,6 +45,16 @@ function App() {
     );
   }
 
+  const minorityLabels = {
+    aanipi: 'Asian American and Native American Pacific Islander',
+    annh: 'Alaska Native and Native Hawaiian',
+    hispanic: 'Hispanic',
+    historically_black: 'Historically Black',
+    nant: 'Native American Nontribal',
+    predominantly_black: 'Predominantly Black',
+    tribal: 'Tribal'
+  };
+
   return (
     <div className="w-screen h-screen">
       <nav className="bg-blue-300 fixed top-0 w-full h-20 flex items-center px-10">
@@ -76,29 +86,28 @@ function App() {
             const latest = school.latest
             const minority = data.minority_serving
             return (
-              <li className="border border-gray-300 p-5" key={school.id}>
-                <h2 className="text-lg font-bold">{data.name}</h2>
-                  <p>{data.address}, {data.city}, {data.state}, {data.zip}</p>
-                  <p>Official Website: <a href={`http://${data.school_url}`} target="_blank" rel="noopener noreferrer">{data.school_url}</a></p>
-                  <p>Associate Programs: {latest.academics.program_available.assoc ? renderPrograms(latest.academics.program.assoc) : 'None'}</p>
-                  <p>Bachelor Programs: {latest.academics.program_available.bachelors ? renderPrograms(latest.academics.program.bachelors): 'None'}</p>
-                  <p>Accreditor: {data.accreditor} ({data.accreditor_code})</p>
-                  <p>Main Campus: {data.main_campus === 0 ? 'No' : 'Yes'}</p>
-                  {data.online_only === 1 && <p>Online Only</p>}
-                  <p>Price Calculator: <a href={`http://${data.price_calculator_url}`} target="_blank" rel="noopener noreferrer">{data.price_calculator_url}</a></p>
-                  {data.men_only === 1 && <p>Men Only</p>}
-                  {data.women_only === 1 && <p>Women Only</p>}
-                  <p>Minority Serving: {Object.values(minority).every(value => value === 0) && 'No'}</p>
-                  <ul className="list-disc pl-10">
-                    {minority.aanipi === 1 && <li>Asian American and Native American Pacific Islander</li>}
-                    {minority.annh === 1 && <li>Alaska Native and Native Hawaiian</li>}                 
-                    {minority.hispanic === 1 && <li>Hispanic</li>}            
-                    {minority.historically_black === 1 && <li>Historically Black</li>}
-                    {minority.nant === 1 && <li>Native American Nontribal</li>}
-                    {minority.predominantly_black === 1 && <li>Predominantly Black</li>}   
-                    {minority.tribal === 1 && <li>Tribal</li>}
-                  </ul>
-                  {data.under_investigation === 1 && <p>Under Investigation:</p>}
+              <li className="school-list-item" key={school.id}>
+                <h2 className="text-2xl font-bold mb-5">{data.name}</h2>
+                <p><span>Address:</span> {data.address}, {data.city}, {data.state}, {data.zip}</p>
+                <p><span>Official Website:</span> <a href={`http://${data.school_url}`} target="_blank" rel="noopener noreferrer">{data.school_url}</a></p>
+                <p><span>Main Campus:</span> {data.main_campus === 0 ? 'No' : 'Yes'}</p>
+                <p><span>Associate Programs:</span> {latest.academics.program_available.assoc ? renderPrograms(latest.academics.program.assoc) : 'None'}</p>
+                <p><span>Bachelor Programs:</span> {latest.academics.program_available.bachelors ? renderPrograms(latest.academics.program.bachelors): 'None'}</p>
+                {data.online_only === 1 && <p>Online Only</p>}
+                <p><span>Price Calculator:</span> <a href={`http://${data.price_calculator_url}`} target="_blank" rel="noopener noreferrer">{data.price_calculator_url}</a></p>
+                {data.men_only === 1 && <span>Men Only</span>}
+                {data.women_only === 1 && <span>Women Only</span>}
+                <p>
+                  <span>Minority Serving: </span> 
+                  {Object.values(minority).every(value => value === 0) ? 'No' : 
+                    Object.keys(minorityLabels)
+                      .filter(key => minority[key] === 1)
+                      .map(key => minorityLabels[key])
+                      .join(', ')
+                  }
+                </p>
+                {data.accreditor && <p><span>Accreditor:</span> {data.accreditor} ({data.accreditor_code})</p>}
+                {data.under_investigation === 1 && <span className="text-red-600">Under Investigation:</span>}
               </li>
             )
           })}
